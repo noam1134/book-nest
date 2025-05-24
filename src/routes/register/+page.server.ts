@@ -44,19 +44,19 @@ export const actions = {
 		}
 
 		//Registration flow
-        const supabase =   createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+		const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
-		const {data, error} = await supabase.auth.signUp({
+		const { data, error } = await supabase.auth.signUp({
 			email,
-			password,
-	})
+			password
+		});
 
-	if(error || !data.user){
-		console.log("Error occured");
-		console.log(error);
-		returnObject.success = true;
-		return fail(400, returnObject as any);		
-	} 
-	redirect(303, '/private/dashboard')        
+		if (error || !data.user) {
+			console.log('Error occured');
+			console.log(error);
+			returnObject.success = true;
+			return fail(400, returnObject as any);
+		}
+		redirect(303, '/private/dashboard');
 	}
 };
