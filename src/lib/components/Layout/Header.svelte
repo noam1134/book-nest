@@ -1,6 +1,7 @@
 <script lang="ts">
 	import bookNestLogo from '$assets/app-logo.svg';
 	import { Button } from '$components';
+	import { UserState } from '$components/state/user-state.svelte';
 </script>
 
 <header>
