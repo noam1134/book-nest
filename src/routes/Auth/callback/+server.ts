@@ -13,8 +13,6 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	if (sessionData.data.session) {
 		const userId = sessionData.data.session.user.id;
 		const userName = sessionData.data.session.user.user_metadata.name;
-		console.log('User ID:', userId);
-		console.log('User Name:', userName);
 
 		const { data: existingUser, error: selectError } = await supabase
 			.from('user_names')

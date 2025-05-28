@@ -1,3 +1,16 @@
+<script lang="ts">
+	import SideNavigation from '$components/Layout/SideNavigation.svelte';
+
+	let { children } = $props();
+</script>
+
+<div class="auth-area">
+	<SideNavigation></SideNavigation>
+	<div class="main-area">
+		{@render children()}
+	</div>
+</div>
+
 <style>
 	.auth-area {
 		display: flex;

@@ -2,7 +2,7 @@
 	import { Header } from '$components';
 	import './../app.css';
 	import { invalidate } from '$app/navigation';
-	import { setUserState } from '$components/state/user-state.svelte';
+	import { setUserState } from '$lib/state/user-state.svelte';
 
 	let { children, data } = $props();
 	let { session, supabase } = $derived(data);
@@ -22,4 +22,5 @@
 </script>
 
 <Header></Header>
+
 {@render children()}
