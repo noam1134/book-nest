@@ -125,6 +125,7 @@ export class UserState {
 
 	async logout() {
 		await this.supabase?.auth.signOut();
+		goto('/login');
 	}
 	getUnreadBooks() {
 		return this.allBooks
@@ -133,7 +134,7 @@ export class UserState {
 			.slice(0, 9);
 	}
 	getFavoriteGenre() {
-		if (this.allBooks.filter(book => book.genre).length === 0) return '';
+		if (this.allBooks.filter((book) => book.genre).length === 0) return '';
 		const genreCounts: { [key: string]: number } = {};
 		this.allBooks.forEach((book) => {
 			const genres = book.genre ? book.genre.split(',') : [];
