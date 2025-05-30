@@ -27,8 +27,7 @@
 		<p class="mb-s">{book.author}</p>
 		<StarRating value={book.rating || 0} isReadOnly={true} />
 	</div>
-	</a
->
+</a>
 
 <style>
 	.book-card {

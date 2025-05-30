@@ -10,14 +10,14 @@
 	let { userName, allBooks } = $derived(userContext);
 </script>
 
-<StarRating value={4} isReadOnly={false} />
-
 <div class="dashboard">
 	<div class="dashboard-header mb-m">
-		<a href="/private/scan-shelf" class="add-book">
-			<Icon icon="icons8:plus" width={'72'} height={'72'} />
-			<p>Add Book</p>
-		</a>
+		{#if allBooks.length}
+			<a href="/private/scan-shelf" class="add-book">
+				<Icon icon="icons8:plus" width={'72'} height={'72'} />
+				<p>Add Book</p>
+			</a>
+		{/if}
 		<div class="headline">
 			<h3 class="bold mb-xs">
 				Welcome Back, {userName ? _.startCase(_.toLower(userName)) : 'User'}
@@ -25,22 +25,32 @@
 			<p>Nothing like the joy of a new book! Have you found your next read yet?</p>
 		</div>
 	</div>
-	<!-- {#each allBooks as book}
-		<BookCard {book}></BookCard>
-	{/each} -->
-	<BookCategory
-		booksToDisplay={userContext.getHighestRatedBooks()}
-		categoryName={'Your most loved books'}
-	/>
-	<!--Book Categories-->
-	<BookCategory
-		booksToDisplay={userContext.getUnreadBooks()}
-		categoryName={'Recently added unread books'}
-	/>
-	<BookCategory
-		booksToDisplay={userContext.getBooksFromFavoriteGenre()}
-		categoryName={`Highest rated books from your favorite genre: ${userContext.getFavoriteGenre()}`}
-	/>
+	{#if allBooks.length}
+		{#if userContext.getHighestRatedBooks().length}
+			<BookCategory
+				booksToDisplay={userContext.getHighestRatedBooks()}
+				categoryName={'Your most loved books'}
+			/>
+		{/if}
+		<BookCategory
+			booksToDisplay={userContext.getUnreadBooks()}
+			categoryName={'Recently added unread books'}
+		/>
+		{#if userContext.getFavoriteGenre()}
+			<BookCategory
+				booksToDisplay={userContext.getBooksFromFavoriteGenre()}
+				categoryName={`Highest rated books from your favorite genre: ${userContext.getFavoriteGenre()}`}
+			/>
+		{/if}
+	{:else}
+		<a href="/private/scan-shelf" class="upload-hint mt-l">
+			<h3>Upload your first book!</h3>
+			<div class="mt-m">
+				<Icon icon="icons8:plus" width={'72'} height={'72'} />
+				<p>Add Books</p>
+			</div></a
+		>
+	{/if}
 </div>
 
 <style>
@@ -65,6 +75,7 @@
 		text-align: right;
 		max-width: 30%;
 		min-width: 300px;
+		margin-left: auto;
 	}
 
 	.upload-hint {
