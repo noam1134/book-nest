@@ -1,11 +1,17 @@
 import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
 import { getContext, setContext } from 'svelte';
 import _ from 'lodash';
+import { goto } from '$app/navigation';
 
 interface UserStateProps {
 	session: Session | null;
 	user: User | null;
 	supabase: SupabaseClient | null;
+}
+
+export interface OpenAiBook {
+	bookTitle: string;
+	author: string;
 }
 
 export interface Book {
@@ -152,6 +158,36 @@ export class UserState {
 			.filter((book) => book.genre?.includes(favoriteGenre))
 			.toSorted((a, b) => b.rating! - a.rating!)
 			.slice(0, 9);
+	}
+
+	async deleteBookFromLibrary(bookId: number) {
+		if (!this.supabase) return;
+		const { error, status } = await this.supabase.from('books').delete().eq('id', bookId);
+		if (status === 204 && !error) {
+			this.allBooks = this.allBooks.filter((book) => book.id !== bookId);
+		}
+		goto('/private/dashboard');
+	}
+
+	async addBooksToLibrary(booksToAdd: OpenAiBook[]) {
+		if (!this.supabase || !this.user) return;
+		const userId = this.user.id;
+		const processedBooks = booksToAdd.map((book) => ({
+			title: book.bookTitle,
+			author: book.author,
+			user_id: userId
+		}));
+		const { error } = await this.supabase.from('books').insert(processedBooks);
+		if (error) {
+			throw new Error('Error adding books to library');
+		} else {
+			const { data } = await this.supabase.from('books').select('*').eq('user_id', userId);
+
+			if (!data) {
+				throw new Error('Error fetching books from database');
+			}
+			this.allBooks = data;
+		}
 	}
 }
 
